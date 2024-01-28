@@ -20,7 +20,7 @@ tempdir = "/dev/shm" if os.path.isdir('/dev/shm') else "/tmp"
 
 outfile = tempdir + "/tmp-" + config['name'] + "-conv.txt"
 
-exwords_re = '(' + '|'.join(config['exclude']) + ')'
+exwords_re = '(' + '|'.join(config['exclude']) + ')' if 'exclude' in config else None
 
 words_count = {}
 
@@ -45,6 +45,9 @@ if model is None:
 
 random.shuffle(config['words'])
 
+response_must_match = '(' + '|'.join(config['response_must_match']) + ')' if 'respose_must_match' in config else None
+response_must_not_match = '(' + '|'.join(config['response_must_not_match']) + ')' if 'respose_must_not_match' in config else None
+
 for word in config['words']:
 	if words_count[word] > 0:
 		print(f"skipping {word}", file=sys.stderr)
@@ -66,12 +69,37 @@ for word in config['words']:
 			lines = []
 			break
 
+		if n == 3:
+			if response_must_match is not None:
+				if not re.search(must_match, line):
+					lines = []
+					break
+			if "simple_response" in config:
+				m = re.search(r'([,\.\!] could |[,\.\!] can |[,\.] What |[,\.\!] would|, but |, let )', line, re.IGNORECASE)
+				if m:
+					line = line[:m.start(1)] + '.'
+					if line.find('sorry.') > 0:
+						print(f"too short line {line}", file=sys.stderr)
+						lines = []
+						break
+					else:
+						print(f"not match {line}", file=sys.stderr)
+				else:
+					print(f"not match {line}", file=sys.stderr)
+			if response_must_not_match is not None:
+				if re.search(must_match, line):
+					lines = []
+					break
+
+		if n == 4 and "simple_response" in config:
+			break
+
 		if line.find(':') < 0:
 			print(f"ending early {word} with: {line}", file=sys.stderr)
 			lines = []
 			break
 
-		if re.search(exwords_re, line, re.IGNORECASE):
+		if exwords_re is not None and re.search(exwords_re, line, re.IGNORECASE):
 			print(f"has excluded word {word}", file=sys.stderr)
 			lines = []
 			break
