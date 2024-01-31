@@ -69,8 +69,6 @@ for word in config['words']:
 			break
 
 		if re.search(exwords_re, line, re.IGNORECASE):
-			print(exwords_re)
-			print(line)
 			print(f"has excluded word {word}", file=sys.stderr)
 			lines = []
 			break
