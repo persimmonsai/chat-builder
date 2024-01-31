@@ -93,6 +93,7 @@ for word in config['words']:
 			if w in words_count: words_count[w] += 1
 
 	if len(lines) > 0:
+		lines.insert(1, f"TERM: {word}")
 		with open(outfile, "a") as f:
 			for line in lines:
 				print(line, file=sys.stderr)
