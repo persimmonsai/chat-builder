@@ -6,6 +6,7 @@ import sys
 import re
 import os
 import json
+import random
 
 if len(sys.argv) < 2:
 	print(f"usage: {sys.argv[0]} CONFIG.JSON", file=sys.stderr)
@@ -41,6 +42,8 @@ if model is None and 'model' in config:
 	model = config['model']
 if model is None:
 	model = 'llama-2-7b.Q4_K_M.gguf'
+
+random.shuffle(config['words'])
 
 for word in config['words']:
 	if words_count[word] > 0:
