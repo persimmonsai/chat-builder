@@ -69,8 +69,14 @@ for word in config['words']:
 
 		if line.find(':') < 0:
 			print(f"ending early {word} with: {line}", file=sys.stderr)
-			lines = []
-			break
+
+			if line == '':
+				print(f"saving entire conversation for {word}", file=sys.stderr)
+				break
+			else:
+				lines = lines[:1]
+				print(f"saving question & term for {word}", file=sys.stderr)
+				break
 
 		if re.search(exwords_re, line, re.IGNORECASE):
 			print(f"has excluded word {word}", file=sys.stderr)
