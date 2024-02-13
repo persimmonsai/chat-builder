@@ -50,7 +50,8 @@ for word in config['words']:
 		print(f"skipping {word}", file=sys.stderr)
 		continue
 	print(f"processing {word}", file=sys.stderr)
-	p = Popen(["./main", "--log-disable", "--escape", "-m", model, "-p",  prompt.format(word = word)], stdout=PIPE, stderr=DEVNULL, encoding="utf-8")
+	args = ["./main", "--log-disable", "--escape", "-m", model, "-p", prompt.format(word = word)] + sys.argv[2:]
+	p = Popen(args, stdout=PIPE, stderr=DEVNULL, encoding="utf-8")
 
 	lines = []
 
