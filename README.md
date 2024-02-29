@@ -19,7 +19,7 @@ Then, we can instead build with `make LLAMA_CUBLAS=1`. When starting the binary,
 
 ```
 make LLAMA_CUBLAS=1
-./main -m phi-2.Q4_K_M.gguf -i -ngl 1000
+./main -m phi-2.Q4_K_M.gguf -i -ngl 20
 ```
 
 ## Testing
@@ -79,7 +79,7 @@ python get-word-conversations.py example.json >> /tmp/example-conv.txt
 If you built `llama.cpp` with `CUBLAS`, you can also pass in the `ngl` GPU layer argument directly into the `get-word-conversations.py` script.
 
 ```console
-python get-word-conversations.py example.json -ngl 1000 >> /tmp/example-conv.txt
+python get-word-conversations.py example.json -ngl 20 >> /tmp/example-conv.txt
 ```
 
 ## Conversations on a Specific Topic
